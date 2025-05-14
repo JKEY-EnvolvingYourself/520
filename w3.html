@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>J & E 永恆的紀念</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg: #fdf6f8;
+      --accent: #c78fa2;
+      --highlight: #fff0f5;
+    }
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: var(--main-bg);
+      color: #444;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.8em;
+      color: var(--accent);
+      margin: 1.5rem 0 0.5rem;
+    }
+    p.subtitle {
+      color: #777;
+      font-size: 1rem;
+      margin: 0 0 2rem;
+    }
+    .slideshow-container {
+      width: 90%;
+      max-width: 600px;
+      margin: auto;
+      position: relative;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    .slideshow-container img {
+      width: 100%;
+      height: auto;
+      opacity: 0;
+      position: absolute;
+      transition: opacity 1.5s ease-in-out;
+    }
+    .slideshow-container img.active {
+      opacity: 1;
+      position: relative;
+    }
+    .timeline {
+      margin-top: 2rem;
+      padding: 0 1rem;
+    }
+    .timeline h2 {
+      color: var(--accent);
+      border-bottom: 1px solid #f5dce5;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+    .timeline-item {
+      margin: 1rem 0;
+      background: var(--highlight);
+      border-radius: 10px;
+      padding: 1rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+      gap: 10px;
+    }
+    .gallery img {
+      width: 45vw;
+      max-width: 180px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.6s ease, opacity 1s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .gallery img.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .quote {
+      margin: 2rem 1rem;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: #888;
+    }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      padding-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>J & E 永恆的紀念</h1>
+  <p class="subtitle">因為有你，世界變得柔軟</p>
+
+  <div class="slideshow-container">
+    <img src="https://jkey-envolvingyourself.github.io/520/1.1.jpg" class="active" alt="slideshow">
+    <img src="https://jkey-envolvingyourself.github.io/520/1.2.jpg" alt="slideshow">
+    <img src="https://jkey-envolvingyourself.github.io/520/1.3.jpg" alt="slideshow">
+  </div>
+
+  <section class="timeline">
+    <h2>我們的旅程</h2>
+    <div class="timeline-item">2023.05.20：第一次牽手</div>
+    <div class="timeline-item">2023.08.14：第一次旅行</div>
+    <div class="timeline-item">2024.02.14：第一次情人節</div>
+  </section>
+
+  <div class="gallery" id="gallery">
+    <img src="https://jkey-envolvingyourself.github.io/520/1.1.jpg">
+    <img src="https://jkey-envolvingyourself.github.io/520/1.2.jpg">
+    <img src="https://jkey-envolvingyourself.github.io/520/1.3.jpg">
+    <img src="https://jkey-envolvingyourself.github.io/520/1.2.jpg">
+  </div>
+
+  <div class="quote">
+    "愛是日常裡不經意的牽掛，也是眼神中最真誠的笑容。"
+  </div>
+
+  <footer>
+    &copy; 2025 J & E 愛情紀念相簿
+  </footer>
+
+  <script>
+    // Slideshow
+    const slides = document.querySelectorAll('.slideshow-container img');
+    let current = 0;
+    setInterval(() => {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 4000);
+
+    // Gallery fade-in
+    const galleryImgs = document.querySelectorAll(".gallery img");
+    galleryImgs.forEach((img, i) => {
+      setTimeout(() => {
+        img.classList.add("fade-in");
+      }, i * 400);
+    });
+  </script>
+</body>
+</html>

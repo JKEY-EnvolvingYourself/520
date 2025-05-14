@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>我們的婚禮相簿</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg: linear-gradient(135deg, #fff0f5, #ffe4e1);
+      --main-color: #e91e63;
+    }
+    body {
+      font-family: 'Dancing Script', cursive;
+      background: var(--main-bg);
+      text-align: center;
+      margin: 0;
+      padding: 10px;
+      overflow-x: hidden;
+    }
+    h1 {
+      color: var(--main-color);
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+    .slideshow img {
+      width: 90vw;
+      max-width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(233, 30, 99, 0.2);
+      transition: transform 0.8s ease-in-out;
+    }
+    .photo-gallery {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      gap: 12px;
+      padding: 10px;
+      margin: 10px auto;
+    }
+    .photo-gallery img {
+      flex-shrink: 0;
+      width: 130px;
+      height: auto;
+      scroll-snap-align: center;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      cursor: pointer;
+      opacity: 0.7;
+      transition: 0.3s;
+    }
+    .photo-gallery img.active {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    .message {
+      font-size: 18px;
+      color: #663366;
+      margin-top: 25px;
+    }
+    .poem {
+      margin-top: 20px;
+      color: #aa336a;
+      font-size: 1.3em;
+      line-height: 1.6em;
+      white-space: pre-line;
+    }
+    #locked h1 {
+      color: var(--main-color);
+      font-size: 2.2em;
+    }
+    #locked p {
+      color: #999;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="locked" style="display: none; text-align: center; padding: 40px;">
+    <h1>🔒 尚未開放</h1>
+    <p>好東西都是值得等待的</p>
+    <p id="countdown" style="margin-top: 10px; color: gray;"></p>
+  </div>
+
+  <div id="unlocked" style="display: none;">
+    <h1>💖 我們結婚了 💖</h1>
+
+    <div class="slideshow">
+      <img id="slide-img" src="" alt="Slideshow">
+    </div>
+
+    <div class="photo-gallery" id="gallery"></div>
+
+    <div class="message">
+      <p>謝謝你參與我們的重要時刻。</p>
+    </div>
+
+    <div class="poem">
+      「時光靜好，<br>
+       與君語；<br>
+       細水流年，<br>
+       與君同；<br>
+       繁華落盡，<br>
+       與君老。」
+    </div>
+
+    <audio autoplay loop>
+      <source id="music-src" src="" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <script>
+    const config = {
+      theme: 'romantic',
+      music: 'https://jkey-envolvingyourself.github.io/520/1.mp3',
+      images: [
+        'https://jkey-envolvingyourself.github.io/520/1.1.jpg',
+        'https://jkey-envolvingyourself.github.io/520/1.2.jpg',
+        'https://jkey-envolvingyourself.github.io/520/1.3.jpg',
+        'https://jkey-envolvingyourself.github.io/520/1.2.jpg'
+      ]
+    };
+
+    const unlockTime = new Date("2025-05-14T10:57:50+08:00");  // 解鎖時間
+    const lockedDiv = document.getElementById("locked");
+    const unlockedDiv = document.getElementById("unlocked");
+    const countdownText = document.getElementById("countdown");
+
+    function formatTimeDiff(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${hours} 小時 ${minutes} 分 ${seconds} 秒`;
+    }
+
+    function checkUnlock() {
+      const now = new Date();
+      if (now >= unlockTime) {
+        lockedDiv.style.display = "none";
+        unlockedDiv.style.display = "block";
+        initAlbum();
+      } else {
+        lockedDiv.style.display = "block";
+        unlockedDiv.style.display = "none";
+        countdownText.textContent = "將在 " + formatTimeDiff(unlockTime - now) + " 後解鎖";
+        setTimeout(checkUnlock, 1000);
+      }
+    }
+
+    function initAlbum() {
+      // 主題色
+      const root = document.documentElement;
+      if (config.theme === 'romantic') {
+        root.style.setProperty('--main-bg', 'linear-gradient(135deg, #fff0f5, #ffe4e1)');
+        root.style.setProperty('--main-color', '#e91e63');
+      }
+
+      // 音樂
+      document.getElementById("music-src").src = config.music;
+      document.querySelector("audio").load();
+
+      // 預覽大圖與小圖同步控制
+      const slideImg = document.getElementById("slide-img");
+      const gallery = document.getElementById("gallery");
+      const thumbnails = [];
+      let current = 0;
+
+      function showImage(index) {
+        current = index;
+        slideImg.src = config.images[current];
+        thumbnails.forEach((thumb, i) => {
+          thumb.classList.toggle("active", i === current);
+        });
+      }
+
+      config.images.forEach((src, i) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.addEventListener("click", () => showImage(i));
+        gallery.appendChild(img);
+        thumbnails.push(img);
+      });
+
+      // 初始化顯示
+      showImage(0);
+
+      // 滑動同步檢查
+      let scrollTimer;
+      gallery.addEventListener("scroll", () => {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+          const galleryRect = gallery.getBoundingClientRect();
+          let minDiff = Infinity;
+          let closest = 0;
+          thumbnails.forEach((img, i) => {
+            const rect = img.getBoundingClientRect();
+            const diff = Math.abs(rect.left + rect.width / 2 - galleryRect.left - galleryRect.width / 2);
+            if (diff < minDiff) {
+              minDiff = diff;
+              closest = i;
+            }
+          });
+          showImage(closest);
+        }, 150);
+      });
+    }
+
+    checkUnlock();
+  </script>
+</body>
+</html>
