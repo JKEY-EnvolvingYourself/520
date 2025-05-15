@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>緊急聯絡 – J·KEY</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #fff8f8;
+      padding: 20px;
+    }
+    h1 {
+      color: #d32f2f;
+    }
+    button {
+      font-size: 18px;
+      margin: 10px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background-color: #d32f2f;
+      color: white;
+      cursor: pointer;
+    }
+    .location-link {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #1976d2;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <h1>📍 緊急聯絡</h1>
+  <p>請於緊急時聯繫您的專屬顧問：</p>
+
+  <button onclick="window.location.href='tel:+886912345678'">📞 撥打電話</button>
+  <button onclick="window.location.href='https://line.me/ti/p/你的LINE_ID'">💬 加入 LINE</button>
+  <button onclick="getLocation()">📡 傳送我的位置</button>
+
+  <p id="location" class="location-link"></p>
+
+  <script>
+    function getLocation() {
+      if (!navigator.geolocation) {
+        alert('您的裝置不支援 GPS 位置功能。');
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const mapURL = `https://maps.google.com/?q=${lat},${lng}`;
+
+        document.getElementById('location').innerHTML = `
+          🌍 我的位置：<br>
+          <a href="${mapURL}" target="_blank">${mapURL}</a>
+        `;
+
+        // 想傳給 LINE？可自動填入訊息範本：
+        const lineMsg = `https://line.me/R/msg/text/?我現在需要幫助，這是我的位置：${encodeURIComponent(mapURL)}`;
+        const lineBtn = document.createElement('button');
+        lineBtn.innerText = '📤 傳給業務（LINE）';
+        lineBtn.onclick = () => window.location.href = lineMsg;
+        document.body.appendChild(lineBtn);
+      }, function(error) {
+        alert('取得位置失敗，請開啟定位權限。');
+      });
+    }
+  </script>
+</body>
+</html>
